@@ -26,4 +26,4 @@ could have added would be a kill feature, as this script will run forever. So th
 kill it from the command-line. 
 
 ## Assumptions 
-1. Python 3 or later
+1. Python 3.5 or later
