@@ -8,6 +8,9 @@ import csv
 import json
 
 def main():
+    """ Main method that handles initial argument validation and finds files
+    in the input directory.
+    """
     valid = True
     if len(sys.argv) != 4:  # If one of our directories is not given as an argument
                             # then we cannot continue with our application
@@ -34,12 +37,15 @@ def main():
                 for f in csvFiles:
                     processFile(f, inputDir, errorDir, outputDir)
                     print("Processing " + f)
+                    csvFiles.remove(f)
             else:
                 time.sleep(5) # Wait 5 seconds if nothing new is found in directory
-                print ("Waiting")
 
 
 def processFile(fileName, inputDirectory, errorDirectory, outputDirectory):
+    """ Processes the file by reading information from the given file and converting
+    it into JSON data, then writes this JSON data to the newly created JSON file.
+    """
     lineCount = 0
     errorDict = {}
     jsonData = []   # Array of dictionaries that will be dumped to JSON
@@ -64,7 +70,6 @@ def processFile(fileName, inputDirectory, errorDirectory, outputDirectory):
 
                 # If the the information is valid then add to our JSON dictionary
                 errorList = validate(idNum, first, middle, last, phone)
-                print(len(errorList))
                 if len(errorList) == 0:     # Add to JSON if no errors were found
                     tempDict = {"id": int(idNum)}
 
@@ -76,7 +81,6 @@ def processFile(fileName, inputDirectory, errorDirectory, outputDirectory):
                     tempDict["name"] = name
 
                     tempDict["phone"] = phone
-                    print (tempDict)
                     jsonData.append(tempDict)
                     lineCount += 1
                 else:
@@ -88,20 +92,23 @@ def processFile(fileName, inputDirectory, errorDirectory, outputDirectory):
                     index += 1
                 lineCount += 1
     if len(errorDict) > 0:
-        with open(str(inputDir+ "/" + fileName), "w") as errorFile:
+        with open(str(errorDirectory + "/" + fileName), "w+") as errorFile:
             headers = ["LINE_NUM", "ERROR_MSG"]
             writer = csv.DictWriter(errorFile, fieldnames=headers)
             writer.writeheader()
             for key in errorDict:
                 for value in errorDict[key]:
                     writer.writerow({"LINE_NUM" : str(key), "ERROR_MSG" : value})
+
+    # Write valid information to JSON file
     jsonName = str(fileName[:len(fileName) - 4] + ".json")
-    with open(outputDirectory + "/" + jsonName, "w") as w:
+    with open(outputDirectory + "/" + jsonName, "w+") as w:
         json.dump(jsonData,w,indent = 4, sort_keys=True)
     os.remove(inputDirectory + "/" + fileName)
 
 
 def validate(idString, firstName, middleName, lastName, phoneNumber):
+    """ Validates that the given attributes are valid for given restrictions. """
     errors = []     # List that holds errors collected throughout validation
 
     # Validate identification number
@@ -145,8 +152,5 @@ def validate(idString, firstName, middleName, lastName, phoneNumber):
                 phoneNumber[8:].isdigit()):
             errors.append("Phone number contains invalid characters.")
     return errors
-
-
-
 
 if __name__ == "__main__": main()
