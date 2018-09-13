@@ -18,7 +18,7 @@ This project was written in Python 3 (Python 3.5.2 to be exact), and since this 
 start to this script will require the python3 command. The main script is located in the src directory of this repository,
 so before running this script make sure you are in the proper directory. Once in this directory, call the command 
 
-python3 main.py * `input-directory` `output-directory` `error-directory`
+python3 main.py `input-directory` `output-directory` `error-directory`
 
 I would like to point out that the arguments for the three directories must be the full path or this script will not work 
 (you can use the short-cuts . .. also if one of the directories is the current or parent directories). One feature I wish I
