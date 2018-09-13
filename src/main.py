@@ -82,7 +82,6 @@ def processFile(fileName, inputDirectory, errorDirectory, outputDirectory):
 
                     tempDict["phone"] = phone
                     jsonData.append(tempDict)
-                    lineCount += 1
                 else:
                     errorDict[lineCount] = errorList # Store found errors
             else:
@@ -90,7 +89,7 @@ def processFile(fileName, inputDirectory, errorDirectory, outputDirectory):
                 for attr in row:
                     columnIndexes[attr] = index     # Sets a new value of index
                     index += 1
-                lineCount += 1
+            lineCount += 1
     if len(errorDict) > 0:
         with open(str(errorDirectory + "/" + fileName), "w+") as errorFile:
             headers = ["LINE_NUM", "ERROR_MSG"]
